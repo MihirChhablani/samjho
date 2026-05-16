@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samjho — Apna Document Samjho</title>
+<meta name="description" content="Koi bhi document upload karo — rent agreement, offer letter, freelance contract — aur seedha samjho kya sign kar rahe ho. Made for Indians.">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --saffron: #F97316; --saffron-light: #FFF7ED; --saffron-mid: #FFEDD5; --saffron-dark: #C2410C;
+  --green: #16A34A; --ok-bg: #F0FDF4; --ok-border: #BBF7D0;
+  --bg: #FAFAF8; --white: #FFFFFF; --text: #111827; --text2: #374151; --muted: #9CA3AF;
+  --border: #F3F4F6; --border2: #E5E7EB;
+  --danger: #DC2626; --danger-bg: #FEF2F2; --danger-border: #FECACA;
+  --warn: #D97706; --warn-bg: #FFFBEB; --warn-border: #FDE68A;
+  --info: #2563EB; --info-bg: #EFF6FF; --info-border: #BFDBFE;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06); --shadow: 0 4px 16px rgba(0,0,0,0.07);
+  --r: 16px; --r-sm: 10px;
+}
+html { color-scheme: light; }
+body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+/* NAV */
+nav { background: var(--white); border-bottom: 1px solid var(--border2); padding: 0 1.5rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow-sm); }
+.logo-wrap { display: flex; align-items: center; gap: 10px; }
+.logo-mark { width: 34px; height: 34px; background: var(--saffron); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 2px 8px rgba(249,115,22,0.3); }
+.logo-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.3rem; color: var(--text); letter-spacing: -0.01em; }
+.logo-name span { color: var(--saffron); }
+.logo-sub { font-size: 0.67rem; color: var(--muted); display: block; line-height: 1; }
+.free-pill { background: var(--ok-bg); color: var(--green); border: 1px solid var(--ok-border); font-size: 0.72rem; font-weight: 600; padding: 0.3rem 0.75rem; border-radius: 2rem; }
+
+/* HERO */
+.hero { background: var(--white); border-bottom: 1px solid var(--border2); padding: 3.5rem 1.5rem 3rem; text-align: center; }
+.eyebrow { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--saffron-light); border: 1px solid #FED7AA; color: var(--saffron-dark); font-size: 0.74rem; font-weight: 600; padding: 0.35rem 1rem; border-radius: 2rem; margin-bottom: 1.25rem; }
+.hero h1 { font-family: 'Nunito', sans-serif; font-size: clamp(2rem, 7vw, 3rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; color: var(--text); margin-bottom: 1rem; }
+.hero h1 .ac { color: var(--saffron); }
+.hero-p { font-size: 1rem; color: #6B7280; line-height: 1.65; max-width: 420px; margin: 0 auto 1.5rem; }
+.price-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: #FFF7ED; border: 1.5px solid #FED7AA; color: var(--saffron-dark); font-size: 0.8rem; font-weight: 700; padding: 0.4rem 1rem; border-radius: 2rem; margin-bottom: 2rem; }
+.steps { display: flex; align-items: flex-start; justify-content: center; max-width: 380px; margin: 0 auto; }
+.step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+.step:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 55%; width: 90%; height: 2px; background: #E5E7EB; z-index: 0; }
+.step-n { width: 28px; height: 28px; background: var(--saffron); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.8rem; position: relative; z-index: 1; margin-bottom: 0.5rem; box-shadow: 0 2px 8px rgba(249,115,22,0.25); }
+.step-l { font-size: 0.7rem; color: var(--muted); text-align: center; font-weight: 500; line-height: 1.3; }
+
+/* CONTAINER */
+.wrap { max-width: 640px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+/* CARD */
+.card { background: var(--white); border: 1px solid var(--border2); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
+
+/* SAMPLE DOCS */
+.sample-strip { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); background: #FAFAFA; }
+.sample-label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem; }
+.sample-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.sample-btn { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--white); border: 1.5px solid var(--border2); border-radius: 2rem; padding: 0.4rem 0.9rem; font-size: 0.78rem; font-weight: 600; color: var(--text2); cursor: pointer; transition: all 0.2s; }
+.sample-btn:hover { border-color: var(--saffron); color: var(--saffron); background: var(--saffron-light); }
+
+/* UPLOAD */
+#uState { padding: 1.5rem; }
+.dzone { border: 2px dashed #D1D5DB; border-radius: var(--r-sm); padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative; background: #FAFAFA; margin-bottom: 1rem; }
+.dzone:hover, .dzone.over { border-color: var(--saffron); background: var(--saffron-light); }
+.dzone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.dzone-icon { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+.dzone h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.35rem; }
+.dzone p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+.dzone-cta { display: inline-block; margin-top: 1rem; background: var(--saffron); color: white; font-size: 0.85rem; font-weight: 600; padding: 0.55rem 1.4rem; border-radius: 2rem; box-shadow: 0 2px 10px rgba(249,115,22,0.3); }
+.fpill { display: none; align-items: center; gap: 0.875rem; background: var(--saffron-mid); border: 1.5px solid #FED7AA; border-radius: var(--r-sm); padding: 0.875rem 1.125rem; margin-bottom: 1rem; }
+.fpill.show { display: flex; }
+.fpill-icon { font-size: 1.6rem; flex-shrink: 0; }
+.fpill-info { flex: 1; min-width: 0; }
+.fpill-name { font-weight: 600; font-size: 0.875rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fpill-status { font-size: 0.73rem; color: var(--saffron-dark); margin-top: 0.15rem; font-weight: 500; }
+.fpill-rm { background: none; border: none; font-size: 1rem; cursor: pointer; color: #9CA3AF; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+.fpill-rm:hover { background: rgba(0,0,0,0.06); color: var(--danger); }
+.abtn { width: 100%; padding: 1rem 1.5rem; background: var(--saffron); color: white; border: none; border-radius: var(--r-sm); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 4px 14px rgba(249,115,22,0.35); }
+.abtn:hover:not(:disabled) { background: var(--saffron-dark); transform: translateY(-1px); }
+.abtn:disabled { background: #E5E7EB; color: #9CA3AF; cursor: not-allowed; box-shadow: none; transform: none; }
+.unote { text-align: center; font-size: 0.72rem; color: #9CA3AF; margin-top: 0.875rem; line-height: 1.6; }
+.ebox { display: none; align-items: flex-start; gap: 0.6rem; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--r-sm); padding: 0.875rem 1rem; margin-top: 0.875rem; font-size: 0.82rem; color: var(--danger); line-height: 1.5; }
+.ebox.show { display: flex; }
+
+/* PAYWALL */
+#pState { display: none; padding: 2.5rem 1.5rem; text-align: center; }
+#pState.show { display: block; }
+.pay-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+#pState h3 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.4rem; color: var(--text); margin-bottom: 0.5rem; }
+#pState p { font-size: 0.875rem; color: #6B7280; line-height: 1.6; margin-bottom: 1.5rem; max-width: 320px; margin-left: auto; margin-right: auto; }
+.price-box { background: var(--saffron-light); border: 2px solid #FED7AA; border-radius: var(--r); padding: 1.5rem; margin-bottom: 1.5rem; }
+.price-main { font-family: 'Nunito', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--saffron); line-height: 1; }
+.price-sub { font-size: 0.8rem; color: var(--saffron-dark); margin-top: 0.25rem; font-weight: 500; }
+.price-perks { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 1rem; text-align: left; }
+.perk { font-size: 0.8rem; color: var(--text2); display: flex; align-items: center; gap: 0.5rem; }
+.pay-btn { width: 100%; padding: 1rem; background: var(--saffron); color: white; border: none; border-radius: var(--r-sm); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(249,115,22,0.35); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.pay-btn:hover { background: var(--saffron-dark); transform: translateY(-1px); }
+.pay-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.75rem; }
+.back-link { background: none; border: none; color: var(--muted); font-size: 0.8rem; cursor: pointer; margin-top: 0.75rem; font-family: 'Plus Jakarta Sans', sans-serif; text-decoration: underline; }
+
+/* LOADING */
+#lState { display: none; padding: 3rem 2rem; text-align: center; }
+#lState.show { display: block; }
+.lring { width: 48px; height: 48px; border: 3px solid #F3F4F6; border-top-color: var(--saffron); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 1.25rem; }
+#lState h3 { font-family: 'Nunito', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 0.4rem; }
+#lState p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+.plist { display: flex; flex-direction: column; gap: 0.5rem; text-align: left; max-width: 260px; margin: 0 auto; }
+.prow { display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem; color: #D1D5DB; font-weight: 500; transition: color 0.3s; }
+.prow.active { color: var(--saffron); }
+.prow.done { color: var(--green); }
+.pdot { width: 7px; height: 7px; border-radius: 50%; background: #D1D5DB; flex-shrink: 0; transition: background 0.3s; }
+.prow.active .pdot { background: var(--saffron); animation: pulse 1s infinite; }
+.prow.done .pdot { background: var(--green); }
+
+/* RESULTS */
+#rState { display: none; padding: 1.5rem; }
+#rState.show { display: block; animation: fadeUp 0.4s ease both; }
+.rh { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border2); flex-wrap: wrap; }
+.rh h2 { font-family: 'Nunito', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--text); line-height: 1.2; }
+.rtag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.9rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+.r-hi { background: var(--danger-bg); color: var(--danger); border: 1.5px solid var(--danger-border); }
+.r-md { background: var(--warn-bg); color: var(--warn); border: 1.5px solid var(--warn-border); }
+.r-lo { background: var(--ok-bg); color: var(--green); border: 1.5px solid var(--ok-border); }
+.rsec { margin-bottom: 1.25rem; }
+.slabel { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+.sbox { background: var(--info-bg); border: 1px solid var(--info-border); border-radius: var(--r-sm); padding: 1.125rem 1.25rem; }
+.sbox p { font-size: 0.9rem; line-height: 1.75; color: var(--text2); }
+.fitem { display: flex; gap: 0.875rem; align-items: flex-start; padding: 1rem 1.125rem; border-radius: var(--r-sm); margin-bottom: 0.625rem; border-left: 3px solid transparent; }
+.fitem.danger { background: var(--danger-bg); border-left-color: var(--danger); }
+.fitem.warning { background: var(--warn-bg); border-left-color: var(--warn); }
+.fitem.info { background: var(--info-bg); border-left-color: var(--info); }
+.femi { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.ftitle { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+.fdesc { font-size: 0.8rem; line-height: 1.6; color: #4B5563; }
+.qitem { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.875rem 1rem; background: var(--ok-bg); border: 1px solid var(--ok-border); border-radius: var(--r-sm); margin-bottom: 0.5rem; }
+.qnum { background: var(--green); color: white; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.45rem; border-radius: 0.35rem; flex-shrink: 0; margin-top: 1px; font-family: 'Nunito', sans-serif; }
+.qtxt { font-size: 0.835rem; line-height: 1.6; color: #166534; font-weight: 500; }
+.tbox { background: linear-gradient(135deg, var(--saffron-light) 0%, #FFF7ED 100%); border: 1.5px solid #FED7AA; border-radius: var(--r-sm); padding: 1.125rem 1.25rem; }
+.tbox p { font-size: 0.875rem; line-height: 1.7; color: #7C2D12; font-weight: 500; }
+.div { height: 1px; background: var(--border2); margin: 1.25rem 0; }
+.action-row { display: flex; gap: 0.75rem; margin-top: 1.25rem; flex-wrap: wrap; }
+.rbtn { flex: 1; min-width: 140px; padding: 0.875rem; background: transparent; color: var(--muted); border: 1.5px solid var(--border2); border-radius: var(--r-sm); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.rbtn:hover { border-color: var(--muted); color: var(--text2); }
+.share-btn { flex: 1; min-width: 140px; padding: 0.875rem; background: var(--saffron-light); color: var(--saffron-dark); border: 1.5px solid #FED7AA; border-radius: var(--r-sm); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+.share-btn:hover { background: var(--saffron-mid); }
+.disclaimer-note { font-size: 0.72rem; color: #9CA3AF; text-align: center; line-height: 1.6; }
+
+/* TRUST STRIP */
+.trust-strip { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; }
+.ti { display: flex; align-items: center; gap: 0.35rem; font-size: 0.74rem; color: #9CA3AF; font-weight: 500; }
+
+/* TRUST CARD */
+.trust-card { background: var(--white); border: 1px solid var(--border2); border-radius: var(--r); padding: 1.25rem 1.5rem; margin-top: 1.25rem; }
+.trust-card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.875rem; }
+.trust-items { display: flex; flex-direction: column; gap: 0.6rem; }
+.trust-item { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.8rem; color: var(--text2); line-height: 1.5; }
+
+/* FOOTER */
+footer { text-align: center; padding: 2rem 1.5rem; border-top: 1px solid var(--border2); margin-top: 2rem; }
+footer p { font-size: 0.75rem; color: var(--muted); line-height: 1.7; }
+footer strong { color: var(--text2); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+@media (max-width: 480px) {
+  nav { padding: 0 1rem; }
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .wrap { padding: 1.25rem 0.875rem 3rem; }
+  #uState, #lState, #rState, #pState { padding: 1.25rem; }
+  .action-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-wrap">
+    <div class="logo-mark">⚖️</div>
+    <div>
+      <div class="logo-name">Sam<span>jho</span></div>
+      <span class="logo-sub">getsamjho.in</span>
+    </div>
+  </div>
+  <span class="free-pill">🇮🇳 1 Free Analysis</span>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">✨ Made in India, for Indians</div>
+  <h1>Koi bhi document,<br><span class="ac">seedha samjho.</span></h1>
+  <p class="hero-p">Rent agreement, offer letter, freelance contract — upload karo aur hum batayenge exactly kya sign kar rahe ho. No jargon. No confusion.</p>
+  <div class="price-badge">🎉 Pehla analysis bilkul free · Uske baad sirf ₹19 per document</div>
+  <div class="steps">
+    <div class="step"><div class="step-n">1</div><div class="step-l">Document<br>upload karo</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-l">AI analyse<br>karega</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-l">Plain language<br>mein samjho</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+
+    <!-- SAMPLE DOCS -->
+    <div class="sample-strip">
+      <div class="sample-label">👀 Pehle try karo — sample documents</div>
+      <div class="sample-btns">
+        <button class="sample-btn" onclick="loadSample('offer')">📄 Sample Offer Letter</button>
+        <button class="sample-btn" onclick="loadSample('rent')">🏠 Sample Rent Agreement</button>
+        <button class="sample-btn" onclick="loadSample('freelance')">💼 Sample Freelance Contract</button>
+      </div>
+    </div>
+
+    <!-- UPLOAD STATE -->
+    <div id="uState">
+      <div class="dzone" id="dz">
+        <input type="file" id="fi" accept=".pdf,.txt,.doc,.docx" />
+        <span class="dzone-icon">📂</span>
+        <h3>Apna document yahan daalo</h3>
+        <p>Rent agreement · Offer letter · Freelance contract · Bond · HR policy</p>
+        <span class="dzone-cta">📱 Tap karke file choose karo</span>
+      </div>
+      <div class="fpill" id="fp">
+        <div class="fpill-icon">📋</div>
+        <div class="fpill-info">
+          <div class="fpill-name" id="fn">—</div>
+          <div class="fpill-status" id="fs">✅ Analyse ke liye ready hai</div>
+        </div>
+        <button class="fpill-rm" id="rm">✕</button>
+      </div>
+      <button class="abtn" id="ab" disabled>🔍 Analyse Karo</button>
+      <p class="unote">🔒 Files stored nahi hoti · Private by default · AI explanation, legal advice nahi</p>
+      <div class="ebox" id="eb"><span>⚠️</span><span id="em">Kuch problem ho gayi.</span></div>
+    </div>
+
+    <!-- PAYWALL STATE -->
+    <div id="pState">
+      <span class="pay-icon">🔒</span>
+      <h3>Free analysis use ho gayi!</h3>
+      <p>Tumhara pehla analysis free tha. Agle documents ke liye sirf ₹19 per upload — ek chai se bhi sasta.</p>
+      <div class="price-box">
+        <div class="price-main">₹19</div>
+        <div class="price-sub">per document analysis</div>
+        <div class="price-perks">
+          <div class="perk">✅ Is document ki full analysis</div>
+          <div class="perk">✅ Important clauses highlighted</div>
+          <div class="perk">✅ Questions to ask before signing</div>
+          <div class="perk">✅ Final takeaway in plain language</div>
+        </div>
+      </div>
+      <button class="pay-btn" id="payBtn">💳 ₹19 mein Analyse Karo</button>
+      <p class="pay-note">🔒 Secure payment via Razorpay · UPI · Cards · Net Banking</p>
+      <button class="back-link" onclick="goUpload()">← Wapas jao</button>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div id="lState">
+      <div class="lring"></div>
+      <h3>Document padh rahe hain...</h3>
+      <p>Bas thoda ruko, carefully check kar rahe hain</p>
+      <div class="plist">
+        <div class="prow" id="p1"><div class="pdot"></div>📖 Document read ho raha hai</div>
+        <div class="prow" id="p2"><div class="pdot"></div>🔍 Important clauses dhundh rahe hain</div>
+        <div class="prow" id="p3"><div class="pdot"></div>⚖️ Risk check kar rahe hain</div>
+        <div class="prow" id="p4"><div class="pdot"></div>✍️ Summary likh rahe hain</div>
+      </div>
+    </div>
+
+    <!-- RESULTS STATE -->
+    <div id="rState">
+      <div class="rh">
+        <h2>Yeh document ke baare mein<br>jo tumhe pata hona chahiye 👇</h2>
+        <div class="rtag r-md" id="rt">⚠️ Medium Risk</div>
+      </div>
+      <div class="rsec">
+        <div class="slabel">📝 Quick summary</div>
+        <div class="sbox"><p id="st"></p></div>
+      </div>
+      <div class="rsec">
+        <div class="slabel">🚨 Important aur risky clauses</div>
+        <div id="fl"></div>
+      </div>
+      <div class="rsec">
+        <div class="slabel">🙋 Sign karne se pehle yeh poocho</div>
+        <div id="ql"></div>
+      </div>
+      <div class="rsec">
+        <div class="slabel">💡 Final takeaway</div>
+        <div class="tbox"><p id="tt"></p></div>
+      </div>
+      <div class="div"></div>
+      <p class="disclaimer-note">⚠️ AI-generated explanation · Yeh formal legal advice nahi hai · Important decisions ke liye ek lawyer se zaroor milna.</p>
+      <div class="action-row">
+        <button class="rbtn" id="rb">← Naya document</button>
+        <button class="share-btn" id="sb">📤 Result share karo</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRUST CARD -->
+  <div class="trust-card">
+    <div class="trust-card-title">🛡️ Tumhari privacy, hamari priority</div>
+    <div class="trust-items">
+      <div class="trust-item"><span>🔒</span><span>Tumhari files permanently store nahi hoti — analysis ke baad delete ho jaati hain.</span></div>
+      <div class="trust-item"><span>👁️</span><span>Tumhara document sirf tumhare analysis ke liye use hota hai. Kisi aur ke saath share nahi hota.</span></div>
+      <div class="trust-item"><span>⚖️</span><span>Yeh AI explanation hai — formal legal advice nahi. Important decisions ke liye lawyer se milna.</span></div>
+      <div class="trust-item"><span>🇮🇳</span><span>Made in India, for Indians. Indian law aur context ko dhyan mein rakh ke banaya gaya hai.</span></div>
+    </div>
+  </div>
+
+  <div class="trust-strip">
+    <div class="ti">🔒 Secure & Private</div>
+    <div class="ti">⚡ 30 seconds mein</div>
+    <div class="ti">🆓 Pehla analysis free</div>
+    <div class="ti">🇮🇳 Made for India</div>
+  </div>
+</div>
+
+<footer>
+  <p><strong>Samjho</strong> — Apna document samjho · getsamjho.in</p>
+  <p>AI explanation · Legal advice nahi · Important decisions ke liye lawyer se milna</p>
+  <p style="margin-top:0.5rem;font-size:0.68rem;">Made with ❤️ for everyday Indians · Beta v1.0</p>
+</footer>
+
+<script>
+// ─── CONFIG ───
+const RAZORPAY_KEY = 'rzp_live_Sq2DVoc89CeRmV';
+const PRICE = 1900; // paise (₹19)
+let freeUsed = localStorage.getItem('samjho_free_used') === 'true';
+let currentDocText = '';
+let currentIsPDF = false;
+let currentPDFB64 = '';
+
+// ─── SAMPLE DOCUMENTS ───
+const SAMPLES = {
+  offer: {
+    name: 'Sample_Offer_Letter.txt',
+    text: `OFFER LETTER
+
+Date: 15th May 2026
+To: [Candidate Name]
+
+Dear Candidate,
+
+We are pleased to offer you the position of Business Development Executive at TechCorp India Pvt. Ltd.
+
+COMPENSATION:
+- Monthly CTC: ₹4,50,000 per annum
+- Fixed: ₹3,60,000 | Variable: ₹90,000 (performance-based)
+- Variables paid annually at management discretion
+
+TERMS:
+- Probation Period: 6 months. During probation, notice period is 15 days.
+- Post-probation Notice Period: 90 days from either side
+- Work Location: Bangalore (work from office mandatory 5 days/week)
+- Working Hours: 9:30 AM to 6:30 PM, Monday to Saturday
+
+NON-COMPETE CLAUSE:
+For 24 months after leaving the company, you shall not join any direct competitor, solicit any of our clients, or start a competing business. Violation will result in legal action and recovery of damages.
+
+INTELLECTUAL PROPERTY:
+All work, ideas, inventions, or code created during employment (including personal time if related to company business) is property of TechCorp India Pvt. Ltd.
+
+MOONLIGHTING:
+You shall not engage in any other employment, consulting, or business activity during your tenure without prior written approval from HR.
+
+TERMINATION:
+Company reserves the right to terminate employment without notice during probation period. Post-probation, 90 days notice is required. Company may pay in lieu of notice at its discretion.
+
+GOVERNING LAW:
+This agreement is governed by Indian law. Disputes subject to exclusive jurisdiction of Bangalore courts.
+
+Please sign and return within 3 days.
+
+Regards,
+HR Department
+TechCorp India Pvt. Ltd.`
+  },
+  rent: {
+    name: 'Sample_Rent_Agreement.txt',
+    text: `RENTAL AGREEMENT
+
+This agreement is made between:
+LANDLORD: Ramesh Kumar Sharma, residing at 45 MG Road, Bangalore
+TENANT: [Your Name]
+
+PROPERTY: 2BHK flat at 12B, Koramangala 5th Block, Bangalore - 560095
+
+TERMS:
+
+1. RENT & DEPOSIT
+Monthly rent: ₹28,000 payable by 1st of every month
+Security deposit: ₹84,000 (3 months rent) — refundable
+Late payment charge: ₹500 per day after 5th of month
+
+2. TENURE
+11 months starting 1st June 2026
+No automatic renewal — new agreement required
+
+3. MAINTENANCE
+Tenant responsible for all maintenance below ₹5,000
+Society maintenance charges: ₹3,500/month (paid by tenant separately)
+Major repairs at landlord discretion only
+
+4. RENT INCREASE
+Landlord can increase rent by up to 10% at time of renewal
+No mid-tenure increase
+
+5. SUBLETTING
+Subletting strictly prohibited. Violation = immediate eviction without deposit refund.
+
+6. NOTICE PERIOD
+Either party must give 2 months written notice before vacating
+If tenant vacates without notice, deposit shall be forfeited
+
+7. DEPOSIT REFUND
+Deposit refunded within 60 days of vacating after deductions for damages
+Landlord decides what constitutes damage
+
+8. RESTRICTIONS
+No pets. No parties after 10 PM. No structural modifications.
+Guests cannot stay more than 7 days without landlord permission.
+
+9. ENTRY
+Landlord has right to inspect property with 24 hours notice
+In emergency, landlord can enter without notice
+
+Signed this day at Bangalore.`
+  },
+  freelance: {
+    name: 'Sample_Freelance_Contract.txt',
+    text: `FREELANCE SERVICE AGREEMENT
+
+Between:
+CLIENT: StartupXYZ Pvt. Ltd., Mumbai
+FREELANCER: [Your Name]
+
+PROJECT: Website design and development for company portal
+
+SCOPE OF WORK:
+- Design and develop company website (up to 10 pages)
+- Mobile responsive design
+- 2 rounds of revisions included
+- Handover of source files upon final payment
+
+PAYMENT TERMS:
+- Total project value: ₹75,000
+- 25% advance on signing (₹18,750)
+- 25% on design approval (₹18,750)
+- 50% on final delivery (₹37,500)
+- Payment within 45 days of invoice. Delay interest: 0%
+
+INTELLECTUAL PROPERTY:
+All work product, designs, code, and creative assets become property of StartupXYZ Pvt. Ltd. upon final payment.
+Freelancer cannot display work in portfolio without written permission.
+Freelancer cannot reuse any design elements for other clients.
+
+CONFIDENTIALITY:
+Freelancer must keep all business information, designs, and strategies strictly confidential for 3 years.
+Violation results in penalty of ₹5,00,000.
+
+REVISIONS:
+Only 2 revision rounds included in scope.
+Additional revisions charged at ₹3,000/hour at client's request only.
+
+TIMELINE:
+Project to be delivered in 45 days.
+Delays by freelancer attract penalty of ₹2,000 per day.
+Delays caused by client (late feedback/approvals) do not extend timeline.
+
+TERMINATION:
+Client can terminate at any time. Freelancer receives payment only for completed milestones.
+Freelancer cannot terminate once work has begun.
+
+DISPUTE:
+Disputes resolved by arbitration in Mumbai. Freelancer bears own legal costs regardless of outcome.
+
+This agreement is binding upon signing.`
+  }
+};
+
+function loadSample(type) {
+  const sample = SAMPLES[type];
+  currentDocText = sample.text;
+  currentIsPDF = false;
+  currentPDFB64 = '';
+  document.getElementById('fn').textContent = sample.name;
+  document.getElementById('fs').textContent = '✅ Sample document ready hai';
+  document.getElementById('fp').classList.add('show');
+  document.getElementById('ab').disabled = false;
+  document.getElementById('eb').classList.remove('show');
+  document.getElementById('fi').value = '';
+}
+
+// ─── FILE HANDLING ───
+const dz = document.getElementById('dz');
+const fi = document.getElementById('fi');
+const fp = document.getElementById('fp');
+const fn = document.getElementById('fn');
+const rm = document.getElementById('rm');
+const ab = document.getElementById('ab');
+const eb = document.getElementById('eb');
+const em = document.getElementById('em');
+
+function showErr(msg) { em.textContent = msg; eb.classList.add('show'); }
+function hideErr() { eb.classList.remove('show'); }
+
+function setFile(f) {
+  if (!f) return;
+  if (f.size > 15*1024*1024) { showErr('File 15MB se badi hai. Chota file try karo.'); return; }
+  currentDocText = '';
+  currentIsPDF = false;
+  currentPDFB64 = '';
+  const isPDF = f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf');
+  if (isPDF) {
+    currentIsPDF = true;
+    b64(f).then(data => { currentPDFB64 = data; });
+  } else {
+    readTxt(f).then(text => { currentDocText = text; });
+  }
+  fn.textContent = f.name;
+  document.getElementById('fs').textContent = '✅ Analyse ke liye ready hai';
+  fp.classList.add('show');
+  ab.disabled = false;
+  hideErr();
+}
+
+fi.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+rm.addEventListener('click', () => {
+  currentDocText = ''; currentIsPDF = false; currentPDFB64 = '';
+  fi.value = ''; fp.classList.remove('show'); ab.disabled = true; hideErr();
+});
+
+// ─── STATE MANAGEMENT ───
+const uState = document.getElementById('uState');
+const pState = document.getElementById('pState');
+const lState = document.getElementById('lState');
+const rState = document.getElementById('rState');
+
+function goUpload() {
+  uState.style.display = 'block';
+  pState.classList.remove('show');
+  lState.classList.remove('show');
+  rState.classList.remove('show');
+}
+
+function goPaywall() {
+  uState.style.display = 'none';
+  pState.classList.add('show');
+  lState.classList.remove('show');
+  rState.classList.remove('show');
+}
+
+function goLoad() {
+  uState.style.display = 'none';
+  pState.classList.remove('show');
+  lState.classList.add('show');
+  rState.classList.remove('show');
+  animProg();
+}
+
+function goResult() {
+  lState.classList.remove('show');
+  rState.classList.add('show');
+}
+
+function animProg() {
+  const rows = ['p1','p2','p3','p4'];
+  rows.forEach(id => { const el = document.getElementById(id); el.classList.remove('active','done'); });
+  rows.forEach((id,i) => {
+    setTimeout(() => {
+      rows.forEach((s,j) => {
+        const el = document.getElementById(s);
+        if (j<i) { el.classList.remove('active'); el.classList.add('done'); }
+        else if (j===i) { el.classList.add('active'); el.classList.remove('done'); }
+        else el.classList.remove('active','done');
+      });
+    }, i*2500);
+  });
+}
+
+// ─── FILE READERS ───
+function b64(f) {
+  return new Promise((res,rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result.split(',')[1]);
+    r.onerror = () => rej(new Error('File read failed'));
+    r.readAsDataURL(f);
+  });
+}
+
+function readTxt(f) {
+  return new Promise((res,rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = () => rej(new Error('File read failed'));
+    r.readAsText(f);
+  });
+}
+
+// ─── PARSE RESPONSE ───
+function parse(text) {
+  const out = { riskLevel:'Medium', summary:'', flags:[], questions:[], takeaway:'' };
+  const rm2 = text.match(/RISK_LEVEL:\s*(High|Medium|Low)/i);
+  if (rm2) out.riskLevel = rm2[1].charAt(0).toUpperCase() + rm2[1].slice(1).toLowerCase();
+  const sm = text.match(/SUMMARY:\s*([\s\S]*?)(?:\n(?:FLAGS|QUESTIONS|TAKEAWAY):)/i);
+  if (sm) out.summary = sm[1].trim();
+  const fm = text.match(/FLAGS:\s*([\s\S]*?)(?:\n(?:QUESTIONS|TAKEAWAY):)/i);
+  if (fm) {
+    fm[1].trim().split('\n').forEach(line => {
+      line = line.trim(); if (!line) return;
+      let sev = null;
+      if (/^DANGER:/i.test(line)) sev = 'danger';
+      else if (/^WARNING:/i.test(line)) sev = 'warning';
+      else if (/^NOTE:/i.test(line)) sev = 'info';
+      if (!sev) return;
+      const body = line.replace(/^(DANGER|WARNING|NOTE):\s*/i,'');
+      const parts = body.split('|');
+      out.flags.push({ sev, title: parts[0].trim(), desc: parts.length>1 ? parts.slice(1).join('|').trim() : '' });
+    });
+  }
+  const qm = text.match(/QUESTIONS:\s*([\s\S]*?)(?:\nTAKEAWAY:)/i);
+  if (qm) {
+    qm[1].trim().split('\n').forEach(line => {
+      const q = line.trim().replace(/^Q:\s*/i,'').trim();
+      if (q) out.questions.push(q);
+    });
+  }
+  const tm = text.match(/TAKEAWAY:\s*([\s\S]*)$/i);
+  if (tm) out.takeaway = tm[1].trim();
+  return out;
+}
+
+// ─── RENDER RESULTS ───
+function render(d) {
+  const tag = document.getElementById('rt');
+  const r = d.riskLevel || 'Medium';
+  if (r==='High') { tag.textContent='🚨 High Risk'; tag.className='rtag r-hi'; }
+  else if (r==='Low') { tag.textContent='✅ Low Risk'; tag.className='rtag r-lo'; }
+  else { tag.textContent='⚠️ Medium Risk'; tag.className='rtag r-md'; }
+  document.getElementById('st').textContent = d.summary || 'Summary available nahi hai.';
+  const icons = {danger:'🚨',warning:'⚠️',info:'ℹ️'};
+  const flist = document.getElementById('fl');
+  flist.innerHTML = '';
+  (d.flags||[]).forEach(f => {
+    flist.innerHTML += `<div class="fitem ${f.sev}"><div class="femi">${icons[f.sev]||'ℹ️'}</div><div><div class="ftitle">${f.title}</div>${f.desc?`<div class="fdesc">${f.desc}</div>`:''}</div></div>`;
+  });
+  if (!d.flags.length) flist.innerHTML = '<div class="fitem info"><div class="femi">ℹ️</div><div class="ftitle">Koi specific red flag nahi mila. Phir bhi dhyan se padhna.</div></div>';
+  const qlist = document.getElementById('ql');
+  qlist.innerHTML = '';
+  (d.questions||[]).forEach((q,i) => {
+    qlist.innerHTML += `<div class="qitem"><span class="qnum">Q${i+1}</span><span class="qtxt">${q}</span></div>`;
+  });
+  document.getElementById('tt').textContent = d.takeaway || '';
+  goResult();
+}
+
+// ─── CALL AI ───
+const SYS = `You are Samjho, a friendly AI assistant made for everyday Indians. Help people understand legal and contractual documents in simple plain language.
+
+Tone: helpful smart friend, not a lawyer. Simple English with light Hinglish where natural.
+
+Respond in EXACTLY this format:
+
+RISK_LEVEL: [High, Medium, or Low]
+
+SUMMARY:
+[2-3 sentences. What is this document and what is the person agreeing to.]
+
+FLAGS:
+[4-6 clauses. Each on new line. Format: DANGER: title | explanation  or  WARNING: title | explanation  or  NOTE: title | explanation]
+
+QUESTIONS:
+[4-5 questions. Each on new line starting with Q: ]
+
+TAKEAWAY:
+[2-3 sentences. Final honest verdict. What are the 1-2 most important things to watch.]
+
+Rules: simple language, no jargon, honest, India-context aware.`;
+
+async function runAnalysis(isFree = false) {
+  goLoad();
+  try {
+    let messages;
+    if (currentIsPDF && currentPDFB64) {
+      messages = [{ role:'user', content:[
+        { type:'document', source:{ type:'base64', media_type:'application/pdf', data: currentPDFB64 } },
+        { type:'text', text:'Please analyse this document.' }
+      ]}];
+    } else {
+      let txt = currentDocText;
+      if (!txt) throw new Error('Document content nahi mila. Dobara upload karo.');
+      if (txt.length > 20000) txt = txt.substring(0,20000) + '\n[truncated]';
+      messages = [{ role:'user', content:'Please analyse this document:\n\n"""\n' + txt + '\n"""' }];
+    }
+
+    const res = await fetch('/api/analyse', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1500, system:SYS, messages })
+    });
+
+    if (!res.ok) {
+      let detail = '';
+      try { const e = await res.json(); detail = e?.error?.message || ''; } catch {}
+      throw new Error(detail || 'Server error ' + res.status);
+    }
+
+    const json = await res.json();
+    if (!json?.content?.length) throw new Error('Empty response. Dobara try karo.');
+    const raw = json.content.filter(b => b.type==='text').map(b => b.text).join('\n').trim();
+    if (!raw) throw new Error('Koi response nahi aaya. Dobara try karo.');
+    render(parse(raw));
+    if (isFree) {
+      freeUsed = true;
+      localStorage.setItem('samjho_free_used', 'true');
+    }
+
+  } catch(err) {
+    lState.classList.remove('show');
+    uState.style.display = 'block';
+    showErr(err.message || 'Unknown error. Dobara try karo.');
+  }
+}
+
+// ─── MAIN ANALYSE BUTTON ───
+ab.addEventListener('click', () => {
+  if (!currentDocText && !currentIsPDF) { showErr('Pehle document upload karo ya sample choose karo.'); return; }
+  if (freeUsed) {
+    goPaywall();
+  } else {
+    runAnalysis(true);
+  }
+});
+
+// ─── RAZORPAY PAYMENT ───
+document.getElementById('payBtn').addEventListener('click', () => {
+  const options = {
+    key: RAZORPAY_KEY,
+    amount: PRICE,
+    currency: 'INR',
+    name: 'Samjho',
+    description: 'Document Analysis — ₹19',
+    image: 'https://getsamjho.in/favicon.png',
+    handler: function(response) {
+      // Payment successful — run analysis
+      runAnalysis();
+    },
+    prefill: { name: '', email: '', contact: '' },
+    notes: { service: 'Document Analysis' },
+    theme: { color: '#F97316' },
+    modal: {
+      ondismiss: function() {
+        // User closed payment modal — stay on paywall
+      }
+    }
+  };
+  const rzp = new Razorpay(options);
+  rzp.on('payment.failed', function(response) {
+    goUpload();
+    showErr('Payment fail ho gayi. Dobara try karo.');
+  });
+  rzp.open();
+});
+
+// ─── RESET & SHARE ───
+document.getElementById('rb').addEventListener('click', goUpload);
+
+document.getElementById('sb').addEventListener('click', () => {
+  const summary = document.getElementById('st').textContent;
+  const takeaway = document.getElementById('tt').textContent;
+  const text = `📄 Samjho — Document Analysis\n\n${summary}\n\n💡 ${takeaway}\n\nApna document samjho: getsamjho.in`;
+  if (navigator.share) {
+    navigator.share({ title: 'Samjho — Document Analysis', text, url: 'https://getsamjho.in' });
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('sb');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.innerHTML = '📤 Result share karo'; }, 2000);
+    });
+  }
+});
+</script>
+</body>
+</html>
